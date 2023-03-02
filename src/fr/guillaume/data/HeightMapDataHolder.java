@@ -1,0 +1,62 @@
+package fr.guillaume.data;
+
+import fr.guillaume.math.graph.Graph;
+import fr.guillaume.math.graph.GraphGenerator;
+
+import java.awt.*;
+import java.util.Arrays;
+
+public class HeightMapDataHolder {
+
+    private static final int[][] DEFAULT_HEIGHT_MAP = new int[10][10];
+
+    static {
+        for (int[] ints : DEFAULT_HEIGHT_MAP) {
+            Arrays.fill(ints, 1);
+        }
+    }
+
+    private final String projectName;
+    private Image thumbnail;
+    private final int[][] map;
+
+    public HeightMapDataHolder(String projectName, Image thumbnail, int[][] map) {
+        this.projectName = projectName;
+        this.thumbnail = thumbnail;
+        this.map = map;
+    }
+
+    public HeightMapDataHolder(String projectName, Image thumbnail) {
+       this(projectName, thumbnail, DEFAULT_HEIGHT_MAP);
+    }
+
+    public int[][] getMap() {
+        return map;
+    }
+
+    public Graph getGraph() {
+        GraphGenerator generator = new GraphGenerator(map);
+        return generator.getNodes();
+    }
+
+    public int getSizeX() {
+        return map.length;
+    }
+
+    public int getSizeY() {
+        return map[0].length;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public Image getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Image thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+}

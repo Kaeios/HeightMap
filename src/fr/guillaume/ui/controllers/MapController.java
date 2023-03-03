@@ -58,7 +58,7 @@ public class MapController implements MouseListener, MouseMotionListener, Action
                         this.solution.getNodes().stream().filter(node -> node.getxPos() == this.startX && node.getyPos() == this.startY).findAny().get()
                 );
 
-                this.state = ViewState.SELECT_END;
+                setState(ViewState.SELECT_END);
 
                 view.refreshMap();
                 view.repaint();
@@ -68,7 +68,7 @@ public class MapController implements MouseListener, MouseMotionListener, Action
 
                 this.path = solver.getShortestPathTo(this.solution.getNodes().stream().filter(node -> node.getxPos() == this.endX && node.getyPos() == this.endY).findAny().get());
 
-                this.state = ViewState.SHOW_PATH;
+                setState(ViewState.SHOW_PATH);
                 this.view.getComputeButton().setEnabled(true);
 
                 view.refreshMap();
@@ -131,12 +131,14 @@ public class MapController implements MouseListener, MouseMotionListener, Action
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(view.getComputeButton())) {
-            this.state = ViewState.SELECT_START;
+            setState(ViewState.SELECT_START);
             this.view.getEditButton().setEnabled(true);
+            this.view.getHeightSlider().setEnabled(false);
             view.getComputeButton().setEnabled(false);
         } else if(e.getSource().equals(view.getEditButton())) {
-            this.state = ViewState.EDIT;
+            setState(ViewState.EDIT);
             this.view.getComputeButton().setEnabled(true);
+            this.view.getHeightSlider().setEnabled(true);
             this.view.getEditButton().setEnabled(false);
         } else if(e.getSource().equals(view.getSaveButton())) {
             try {
@@ -155,10 +157,16 @@ public class MapController implements MouseListener, MouseMotionListener, Action
     }
 
     public enum ViewState {
-        EDIT,
-        SELECT_START,
-        SELECT_END,
-        SHOW_PATH
+        EDIT("(!) Cliquez sur la carte pour placer des tuiles"),
+        SELECT_START("(!) Sélectionnez un point de départ"),
+        SELECT_END("(!) Sélectionnez un point de d'arrivé"),
+        SHOW_PATH("(!) Sélectionnez une action à effectuer");
+
+        private final String helpText;
+
+        ViewState(String helpText) {
+            this.helpText = helpText;
+        }
     }
 
     public List<Placeable> getStateOverlay() {
@@ -172,6 +180,12 @@ public class MapController implements MouseListener, MouseMotionListener, Action
         }
 
         return overlays;
+    }
+
+    public void setState(ViewState state) {
+        this.state = state;
+
+        this.view.getHelpText().setText(state.helpText);
     }
 
 }

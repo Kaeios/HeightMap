@@ -27,6 +27,8 @@ public class MapView extends JFrame {
     private JButton computeButton;
     private JButton saveButton;
 
+    private JLabel helpText;
+
     private CursorRenderer cursorRenderer;
     private ImageComponent mapComponent;
 
@@ -44,7 +46,7 @@ public class MapView extends JFrame {
         setTitle("HeightMap : " + this.heightMap.getProjectName());
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 800);
+        setSize(800, 800);
         setResizable(false);
     }
 
@@ -55,6 +57,13 @@ public class MapView extends JFrame {
         setupComputeButton();
         setupEditButton();
         setupSaveButton();
+        setupHelpText();
+    }
+
+    private void setupHelpText() {
+        helpText = new JLabel("(!) Cliquez sur la carte pour placer des tuiles");
+        helpText.setBounds(32, 680, 500, 20);
+        add(helpText);
     }
 
     private void setupHeightSlider() {
@@ -63,7 +72,8 @@ public class MapView extends JFrame {
         heightSlider.setPaintTicks(true);
         heightSlider.setPaintTrack(true);
         heightSlider.setEnabled(true);
-        heightSlider.setBounds(720, 32, 50, 64 * 10);
+        heightSlider.setToolTipText("Réglage de la hauteur");
+        heightSlider.setBounds(700, 32, 50, 64 * 10);
         heightSlider.setMinorTickSpacing(1);
         heightSlider.setMajorTickSpacing(1);
         add(heightSlider);
@@ -71,21 +81,21 @@ public class MapView extends JFrame {
 
     private void setupComputeButton() {
         computeButton = new JButton("Calculer");
-        computeButton.setBounds(32, 680, 132, 50);
+        computeButton.setBounds(32, 700, 132, 50);
         add(computeButton);
         computeButton.addActionListener(controller);
     }
 
     private void setupSaveButton() {
         saveButton = new JButton("Sauvegarder");
-        saveButton.setBounds(132 * 2 + 32 * 3, 680, 132, 50);
+        saveButton.setBounds(132 * 2 + 32 * 3, 700, 132, 50);
         add(saveButton);
         saveButton.addActionListener(controller);
     }
 
     private void setupEditButton() {
         editButton = new JButton("Modifier");
-        editButton.setBounds( 132 + 32 * 2, 680, 132, 50);
+        editButton.setBounds( 132 + 32 * 2, 700, 132, 50);
         editButton.setEnabled(false);
         add(editButton);
         editButton.addActionListener(controller);
@@ -125,24 +135,12 @@ public class MapView extends JFrame {
         return heightSlider;
     }
 
-    public void setHeightSlider(JSlider heightSlider) {
-        this.heightSlider = heightSlider;
-    }
-
     public JButton getComputeButton() {
         return computeButton;
     }
 
-    public void setComputeButton(JButton computeButton) {
-        this.computeButton = computeButton;
-    }
-
     public CursorRenderer getCursorRenderer() {
         return cursorRenderer;
-    }
-
-    public void setCursorRenderer(CursorRenderer cursorRenderer) {
-        this.cursorRenderer = cursorRenderer;
     }
 
     public HeightMapDataHolder getHeightMap() {
@@ -156,4 +154,9 @@ public class MapView extends JFrame {
     public JButton getSaveButton() {
         return saveButton;
     }
+
+    public JLabel getHelpText() {
+        return helpText;
+    }
+
 }

@@ -1,4 +1,7 @@
-package fr.guillaume.math.graph;
+package fr.guillaume.math.graph.solving;
+
+import fr.guillaume.math.graph.Graph;
+import fr.guillaume.math.graph.Node;
 
 import java.util.List;
 
@@ -14,5 +17,6 @@ public abstract class Solver {
 
     public abstract List<Node> getShortestPathTo(Node node);
     public abstract int getShortestPathCostTo(Node node);
+    public abstract boolean isFast();
 
 }

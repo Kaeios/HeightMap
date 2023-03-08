@@ -1,10 +1,10 @@
 package fr.guillaume.ui.controllers;
 
 import fr.guillaume.data.MapStorage;
-import fr.guillaume.math.graph.DjikstraSolver;
+import fr.guillaume.math.graph.solving.DjikstraSolver;
 import fr.guillaume.math.graph.Graph;
 import fr.guillaume.math.graph.Node;
-import fr.guillaume.math.graph.Solver;
+import fr.guillaume.math.graph.solving.Solver;
 import fr.guillaume.ui.rendering.Placeable;
 import fr.guillaume.ui.rendering.tiles.CursorRenderer;
 import fr.guillaume.ui.rendering.tiles.PathRenderer;

@@ -1,4 +1,8 @@
-package fr.guillaume.math.graph;
+package fr.guillaume.math.graph.solving;
+
+import fr.guillaume.math.graph.Edge;
+import fr.guillaume.math.graph.Graph;
+import fr.guillaume.math.graph.Node;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -69,6 +73,11 @@ public class DjikstraSolver extends Solver {
     @Override
     public int getShortestPathCostTo(Node other) {
         return other.getDistance();
+    }
+
+    @Override
+    public boolean isFast() {
+        return true;
     }
 
 }

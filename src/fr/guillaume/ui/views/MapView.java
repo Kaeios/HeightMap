@@ -21,7 +21,6 @@ public class MapView extends JFrame {
     private final HeightMapDataHolder heightMap;
 
     private final MapController controller;
-    private final LoadMapView loadMapView;
 
     private JSlider heightSlider;
 
@@ -40,7 +39,6 @@ public class MapView extends JFrame {
 
         this.heightMap = heightMap;
         this.controller = new MapController(storage, this);
-        this.loadMapView = loadMapView;
 
         setupWindow();
         renderView();
@@ -175,7 +173,4 @@ public class MapView extends JFrame {
         return helpText;
     }
 
-    public LoadMapView getLoadMapView() {
-        return loadMapView;
-    }
 }

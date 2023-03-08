@@ -8,6 +8,7 @@ import fr.guillaume.ui.rendering.Placeable;
 import fr.guillaume.ui.rendering.tiles.CursorRenderer;
 import fr.guillaume.ui.rendering.tiles.PathRenderer;
 import fr.guillaume.ui.rendering.tiles.PathWeightRenderer;
+import fr.guillaume.ui.views.LoadMapView;
 import fr.guillaume.ui.views.MapView;
 
 import java.awt.event.*;
@@ -153,8 +154,9 @@ public class MapController implements MouseListener, MouseMotionListener, Action
             this.view.setVisible(false);
             this.view.removeAll();
             this.view.setEnabled(false);
-            this.view.getLoadMapView().repaint();
-            this.view.getLoadMapView().setVisible(true);
+
+            LoadMapView loadView = new LoadMapView(this.storage);
+            loadView.setVisible(true);
         }
 
         view.refreshMap();

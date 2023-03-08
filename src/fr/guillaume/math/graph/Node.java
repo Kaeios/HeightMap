@@ -15,6 +15,7 @@ public class Node {
     private final List<Edge> edges = new ArrayList<>();
 
     private int distance = Integer.MAX_VALUE;
+    private int nextTryIndex = 0;
 
     public Node(int xPos, int yPos, int height) {
         this.xPos = xPos;
@@ -65,4 +66,13 @@ public class Node {
     public int getyPos() {
         return yPos;
     }
+
+    public int getNextTryIndex() {
+        return nextTryIndex;
+    }
+
+    public void setNextTryIndex(int nextTryIndex) {
+        this.nextTryIndex = nextTryIndex;
+    }
+
 }

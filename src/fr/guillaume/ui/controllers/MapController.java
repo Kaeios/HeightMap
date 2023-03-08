@@ -1,6 +1,7 @@
 package fr.guillaume.ui.controllers;
 
 import fr.guillaume.data.MapStorage;
+import fr.guillaume.math.graph.solving.BacktrackSolver;
 import fr.guillaume.math.graph.solving.DjikstraSolver;
 import fr.guillaume.math.graph.Graph;
 import fr.guillaume.math.graph.Node;
@@ -72,7 +73,8 @@ public class MapController implements MouseListener, MouseMotionListener, Action
                 this.endY = newCursorY;
 
                 this.path = solver.getShortestPathTo(this.solution.getNodes().stream().filter(node -> node.getxPos() == this.endX && node.getyPos() == this.endY).findAny().get());
-
+//                this.path = new BacktrackSolver(this.view.getHeightMap().getGraph(), this.solution.getNodes().stream().filter(node -> node.getxPos() == this.startX && node.getyPos() == this.startY).findAny().get())
+//                        .getShortestPathTo(this.solution.getNodes().stream().filter(node -> node.getxPos() == this.endX && node.getyPos() == this.endY).findAny().get());
                 setState(ViewState.SHOW_PATH);
                 this.view.getComputeButton().setEnabled(true);
 

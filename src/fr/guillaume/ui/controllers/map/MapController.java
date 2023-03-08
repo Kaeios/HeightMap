@@ -30,8 +30,8 @@ public class MapController extends FullMouseController {
     private final MapView view;
     private MapViewState state = MapViewState.EDIT;
 
-    IntVector2D startPosition;
-    IntVector2D endPosition;
+    private IntVector2D startPosition;
+    private IntVector2D endPosition;
 
     private Graph solution;
     private Solver solver;

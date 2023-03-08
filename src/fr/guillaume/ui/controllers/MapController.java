@@ -20,7 +20,7 @@ import java.util.List;
 public class MapController implements MouseListener, MouseMotionListener, ActionListener {
 
     private final MapStorage storage;
-    private final SolverType solverType = SolverType.BACKTRACK;
+    private final SolverType solverType = SolverType.DJIKSTRA;
 
     private final MapView view;
     private ViewState state = ViewState.EDIT;

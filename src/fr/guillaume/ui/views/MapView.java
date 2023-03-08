@@ -3,6 +3,7 @@ package fr.guillaume.ui.views;
 import fr.guillaume.data.HeightMapDataHolder;
 import fr.guillaume.data.MapStorage;
 import fr.guillaume.ui.components.RenderedComponent;
+import fr.guillaume.ui.components.buttons.HandledButton;
 import fr.guillaume.ui.controllers.map.MapController;
 import fr.guillaume.ui.rendering.OverlayRenderer;
 import fr.guillaume.ui.rendering.Placeable;
@@ -24,10 +25,10 @@ public class MapView extends JFrame {
 
     private JSlider heightSlider;
 
-    private JButton editButton;
-    private JButton computeButton;
-    private JButton saveButton;
-    private JButton loadButton;
+    private HandledButton editButton;
+    private HandledButton computeButton;
+    private HandledButton saveButton;
+    private HandledButton loadButton;
 
     private JLabel helpText;
 
@@ -83,32 +84,32 @@ public class MapView extends JFrame {
     }
 
     private void setupComputeButton() {
-        computeButton = new JButton("Calculer");
+        computeButton = new HandledButton("compute", "Calculer");
         computeButton.setBounds(32, 700, 132, 50);
+        computeButton.registerHandler(this.controller);
         add(computeButton);
-        computeButton.addActionListener(controller);
     }
 
     private void setupSaveButton() {
-        saveButton = new JButton("Sauvegarder");
+        saveButton = new HandledButton("save", "Sauvegarder");
         saveButton.setBounds(132 * 2 + 32 * 3, 700, 132, 50);
+        saveButton.registerHandler(this.controller);
         add(saveButton);
-        saveButton.addActionListener(controller);
     }
 
     private void setupEditButton() {
-        editButton = new JButton("Modifier");
+        editButton = new HandledButton("edit", "Modifier");
         editButton.setBounds( 132 + 32 * 2, 700, 132, 50);
         editButton.setEnabled(false);
+        editButton.registerHandler(this.controller);
         add(editButton);
-        editButton.addActionListener(controller);
     }
 
     private void setupLoadButton() {
-        loadButton = new JButton("Charger");
+        loadButton = new HandledButton("load", "Charger");
         loadButton.setBounds( 132 * 3 + 32 * 4, 700, 132, 50);
+        loadButton.registerHandler(this.controller);
         add(loadButton);
-        loadButton.addActionListener(controller);
     }
 
     public void refreshMap() {

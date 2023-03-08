@@ -5,6 +5,7 @@ import fr.guillaume.math.graph.Graph;
 import fr.guillaume.math.graph.Node;
 import fr.guillaume.math.graph.solving.Solver;
 import fr.guillaume.math.graph.solving.SolverType;
+import fr.guillaume.ui.components.buttons.ButtonHandler;
 import fr.guillaume.ui.controllers.FullMouseController;
 import fr.guillaume.ui.rendering.Placeable;
 import fr.guillaume.ui.rendering.tiles.CursorRenderer;
@@ -18,7 +19,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MapController extends FullMouseController implements ActionListener {
+public class MapController extends FullMouseController {
 
     private final int tileSize;
 
@@ -137,35 +138,51 @@ public class MapController extends FullMouseController implements ActionListener
         view.repaint();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource().equals(view.getComputeButton())) {
-            setState(MapViewState.SELECT_START);
-            this.view.getEditButton().setEnabled(true);
-            this.view.getHeightSlider().setEnabled(false);
-            view.getComputeButton().setEnabled(false);
-        } else if(e.getSource().equals(view.getEditButton())) {
-            setState(MapViewState.EDIT);
-            this.view.getComputeButton().setEnabled(true);
-            this.view.getHeightSlider().setEnabled(true);
-            this.view.getEditButton().setEnabled(false);
-        } else if(e.getSource().equals(view.getSaveButton())) {
-            try {
-                this.storage.saveMap(this.view.getHeightMap());
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        } else if(e.getSource().equals(view.getLoadButton())) {
-            this.view.setVisible(false);
-            this.view.removeAll();
-            this.view.setEnabled(false);
+    @ButtonHandler(targetId = "compute")
+    public void onPressComputeButton() {
+        setState(MapViewState.SELECT_START);
+        this.view.getEditButton().setEnabled(true);
+        this.view.getHeightSlider().setEnabled(false);
+        view.getComputeButton().setEnabled(false);
 
-            LoadMapView loadView = new LoadMapView(this.storage);
-            loadView.setVisible(true);
+        this.view.refreshMap();
+        this.view.repaint();
+    }
+
+    @ButtonHandler(targetId = "edit")
+    public void onPressEditButton() {
+        setState(MapViewState.EDIT);
+        this.view.getComputeButton().setEnabled(true);
+        this.view.getHeightSlider().setEnabled(true);
+        this.view.getEditButton().setEnabled(false);
+
+        this.view.refreshMap();
+        this.view.repaint();
+    }
+
+    @ButtonHandler(targetId = "save")
+    public void onPressSaveButton() {
+        try {
+            this.storage.saveMap(this.view.getHeightMap());
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+    @ButtonHandler(targetId = "load")
+    public void onPressLoadButton() {
+        try {
+            this.storage.saveMap(this.view.getHeightMap());
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
 
-        view.refreshMap();
-        view.repaint();
+        this.view.setVisible(false);
+        this.view.removeAll();
+        this.view.setEnabled(false);
+
+        LoadMapView loadView = new LoadMapView(this.storage);
+        loadView.setVisible(true);
     }
 
     public MapViewState getState() {

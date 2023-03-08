@@ -1,13 +1,14 @@
 package fr.guillaume.math.graph;
 
+import fr.guillaume.math.IntVector2D;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Node {
 
-    private final int xPos;
-    private final int yPos;
+    private final IntVector2D position;
 
     private final int height;
 
@@ -17,9 +18,8 @@ public class Node {
     private int distance = Integer.MAX_VALUE;
     private int nextTryIndex = 0;
 
-    public Node(int xPos, int yPos, int height) {
-        this.xPos = xPos;
-        this.yPos = yPos;
+    public Node(IntVector2D position, int height) {
+        this.position = position;
         this.height = height;
     }
 
@@ -59,20 +59,16 @@ public class Node {
         this.shortestPath = shortestPath;
     }
 
-    public int getxPos() {
-        return xPos;
-    }
-
-    public int getyPos() {
-        return yPos;
-    }
-
     public int getNextTryIndex() {
         return nextTryIndex;
     }
 
     public void setNextTryIndex(int nextTryIndex) {
         this.nextTryIndex = nextTryIndex;
+    }
+
+    public IntVector2D getPosition() {
+        return position;
     }
 
 }

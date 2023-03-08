@@ -1,6 +1,7 @@
 package fr.guillaume.ui.controllers.map;
 
 import fr.guillaume.data.MapStorage;
+import fr.guillaume.math.IntVector2D;
 import fr.guillaume.math.graph.Graph;
 import fr.guillaume.math.graph.Node;
 import fr.guillaume.math.graph.solving.Solver;
@@ -29,11 +30,8 @@ public class MapController extends FullMouseController {
     private final MapView view;
     private MapViewState state = MapViewState.EDIT;
 
-    private int startX = -1;
-    private int startY = -1;
-
-    private int endX = -1;
-    private int endY = -1;
+    IntVector2D startPosition;
+    IntVector2D endPosition;
 
     private Graph solution;
     private Solver solver;
@@ -60,13 +58,14 @@ public class MapController extends FullMouseController {
                 view.getHeightMap().getMap()[newCursorX][newCursorY] = view.getHeightSlider().getValue();
                 view.repaint();
             } else if(this.state.equals(MapViewState.SELECT_START)){
-                this.startX = newCursorX;
-                this.startY = newCursorY;
+                this.startPosition = new IntVector2D(newCursorX, newCursorY);
 
                 this.solution = this.view.getHeightMap().getGraph();
                 this.solver = solverType.get(
                         this.solution,
-                        this.solution.getNodes().stream().filter(node -> node.getxPos() == this.startX && node.getyPos() == this.startY).findAny().get()
+                        this.solution.getNodes()
+                                .stream()
+                                .filter(node -> node.getPosition() == this.startPosition).findAny().get()
                 );
 
                 setState(MapViewState.SELECT_END);
@@ -74,12 +73,11 @@ public class MapController extends FullMouseController {
                 view.refreshMap();
                 view.repaint();
             } else if(this.state.equals(MapViewState.SELECT_END)) {
-                this.endX = newCursorX;
-                this.endY = newCursorY;
+                this.endPosition = new IntVector2D(newCursorX, newCursorY);
 
                 this.path = solver.getShortestPathTo(this.solution.getNodes()
                         .stream()
-                        .filter(node -> node.getxPos() == this.endX && node.getyPos() == this.endY)
+                        .filter(node -> node.getPosition() == this.endPosition)
                         .findAny()
                         .get()
                 );

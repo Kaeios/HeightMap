@@ -22,9 +22,9 @@ public class Graph {
     public int[][] getWeightMap() {
         int[][] weightMap = new int[sizeX][sizeY];
 
-        this.nodes.forEach(node -> {
-            weightMap[node.getxPos()][node.getyPos()] = node.getDistance();
-        });
+        this.nodes.forEach(
+                node -> weightMap[node.getPosition().getX()][node.getPosition().getY()] = node.getDistance()
+        );
 
         return weightMap;
     }

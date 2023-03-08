@@ -1,5 +1,6 @@
 package fr.guillaume.ui.rendering.tiles;
 
+import fr.guillaume.math.IntVector2D;
 import fr.guillaume.math.graph.Node;
 import fr.guillaume.ui.rendering.Placeable;
 
@@ -40,11 +41,14 @@ public class PathRenderer extends TiledRenderer implements Placeable {
         for (int i = 0; i < this.path.size() - 1; i++) {
             Node current = pathIterator.next();
 
-            int centerCurrentX = getTilePositionFromXIndex(current.getxPos()) + tileSize/2;
-            int centerCurrentY = getTilePositionFromYIndex(current.getyPos()) + tileSize/2;
+            IntVector2D currentPosition = current.getPosition();
+            IntVector2D lastPosition = lastNode.getPosition();
 
-            int centerNextX = getTilePositionFromXIndex(lastNode.getxPos()) + tileSize/2;
-            int centerNextY = getTilePositionFromYIndex(lastNode.getyPos()) + tileSize/2;
+            int centerCurrentX = getTilePositionFromXIndex(currentPosition.getX()) + tileSize/2;
+            int centerCurrentY = getTilePositionFromYIndex(currentPosition.getY()) + tileSize/2;
+
+            int centerNextX = getTilePositionFromXIndex(lastPosition.getX()) + tileSize/2;
+            int centerNextY = getTilePositionFromYIndex(lastPosition.getY()) + tileSize/2;
 
             graphics.drawLine(centerNextX, centerNextY, centerCurrentX, centerCurrentY);
 

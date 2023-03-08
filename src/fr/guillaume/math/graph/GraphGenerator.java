@@ -27,7 +27,7 @@ public class GraphGenerator {
         this.nodes = new Node[sizeX][sizeY];
         for (int xPos = 0; xPos < sizeX; xPos++) {
             for (int yPos = 0; yPos < sizeY; yPos++) {
-                nodes[xPos][yPos] = new Node(xPos, yPos, heightMap[xPos][yPos]);
+                nodes[xPos][yPos] = new Node(new IntVector2D(xPos, yPos), heightMap[xPos][yPos]);
             }
         }
 

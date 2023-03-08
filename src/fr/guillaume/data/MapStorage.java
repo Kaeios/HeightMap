@@ -6,11 +6,11 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Files;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
+//TODO Change file format
 public class MapStorage {
 
     private static final File DATA_FOLDER = new File("saved_maps/");

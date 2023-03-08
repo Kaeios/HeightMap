@@ -4,6 +4,7 @@ import fr.guillaume.data.MapStorage;
 import fr.guillaume.math.graph.DjikstraSolver;
 import fr.guillaume.math.graph.Graph;
 import fr.guillaume.math.graph.Node;
+import fr.guillaume.math.graph.Solver;
 import fr.guillaume.ui.rendering.Placeable;
 import fr.guillaume.ui.rendering.tiles.CursorRenderer;
 import fr.guillaume.ui.rendering.tiles.PathRenderer;
@@ -30,7 +31,7 @@ public class MapController implements MouseListener, MouseMotionListener, Action
     private int endY = -1;
 
     private Graph solution;
-    private DjikstraSolver solver;
+    private Solver solver;
     private List<Node> path = new LinkedList<>();
 
     public MapController(MapStorage storage, MapView view) {

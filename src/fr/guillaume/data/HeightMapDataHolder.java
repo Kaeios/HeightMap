@@ -1,5 +1,6 @@
 package fr.guillaume.data;
 
+import fr.guillaume.math.IntVector2D;
 import fr.guillaume.math.graph.Graph;
 import fr.guillaume.math.graph.GraphGenerator;
 
@@ -61,6 +62,14 @@ public class HeightMapDataHolder implements Cloneable {
 
     public HeightMapDataHolder clone() {
         return new HeightMapDataHolder(projectName, thumbnail, cloneArray(map));
+    }
+
+    public int getHeightAt(IntVector2D position) {
+        return map[position.getX()][position.getY()];
+    }
+
+    public void setHeightAt(IntVector2D position, int height) {
+        map[position.getX()][position.getY()] = height;
     }
 
     private static int[][] cloneArray(int[][] arr) {

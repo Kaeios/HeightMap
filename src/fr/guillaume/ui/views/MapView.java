@@ -2,6 +2,7 @@ package fr.guillaume.ui.views;
 
 import fr.guillaume.data.HeightMapDataHolder;
 import fr.guillaume.data.MapStorage;
+import fr.guillaume.math.IntVector2D;
 import fr.guillaume.ui.components.RenderedComponent;
 import fr.guillaume.ui.components.buttons.HandledButton;
 import fr.guillaume.ui.controllers.map.MapController;
@@ -40,6 +41,9 @@ public class MapView extends JFrame {
 
         this.heightMap = heightMap;
         this.controller = new MapController(storage, this, TILE_SIZE);
+
+        getContentPane().addMouseListener(controller);
+        getContentPane().addMouseMotionListener(controller);
 
         setupWindow();
         renderView();
@@ -128,14 +132,11 @@ public class MapView extends JFrame {
     }
 
     private void setupMapComponent() {
-        cursorRenderer = new CursorRenderer(3, 4, TILE_SIZE);
+        cursorRenderer = new CursorRenderer(null, TILE_SIZE);
 
         mapComponent = new RenderedComponent();
         mapComponent.setBounds(0, 0, 64 * 10 + 32, 64 * 10 + 32);
         add(mapComponent);
-
-        mapComponent.addMouseListener(controller);
-        mapComponent.addMouseMotionListener(controller);
     }
 
     public MapController getController() {

@@ -48,47 +48,46 @@ public class MapController extends FullMouseController {
         int xPos = event.getX();
         int yPos = event.getY();
 
-        if(xPos > 32 && xPos < 32 + tileSize*this.view.getHeightMap().getSizeX()
-                && yPos > 32 && yPos < 32 + tileSize *this.view.getHeightMap().getSizeY())
-        {
-            int newCursorX = (xPos - 32) / tileSize;
-            int newCursorY = (yPos - 32) / tileSize;
+        // Si le curseur n'est pas sur la carte on ne fait rien
+        if(xPos <= 32 || xPos >= 32 + tileSize*this.view.getHeightMap().getSizeX()
+                || yPos <= 32 || yPos >= 32 + tileSize *this.view.getHeightMap().getSizeY()) return;
 
-            if(this.state.equals(MapViewState.EDIT)) {
-                view.getHeightMap().getMap()[newCursorX][newCursorY] = view.getHeightSlider().getValue();
-                view.repaint();
-            } else if(this.state.equals(MapViewState.SELECT_START)){
-                this.startPosition = new IntVector2D(newCursorX, newCursorY);
+        // On récupère la position de la case sur laquelle se trouve la souris
+        IntVector2D cursorPosition = new IntVector2D((xPos - 32) / tileSize, (yPos - 32) / tileSize);
 
-                this.solution = this.view.getHeightMap().getGraph();
-                this.solver = solverType.get(
-                        this.solution,
-                        this.solution.getNodes()
-                                .stream()
-                                .filter(node -> node.getPosition().equals(this.startPosition)).findAny().get()
-                );
+        if(this.state.equals(MapViewState.EDIT)) {
+            view.getHeightMap().setHeightAt(cursorPosition, view.getHeightSlider().getValue());
+            view.repaint();
+        } else if(this.state.equals(MapViewState.SELECT_START)){
+            this.startPosition = cursorPosition;
 
-                setState(MapViewState.SELECT_END);
+            this.solution = this.view.getHeightMap().getGraph();
+            this.solver = solverType.get(
+                    this.solution,
+                    this.solution.getNodes()
+                            .stream()
+                            .filter(node -> node.getPosition().equals(this.startPosition)).findAny().get()
+            );
 
-                view.refreshMap();
-                view.repaint();
-            } else if(this.state.equals(MapViewState.SELECT_END)) {
-                this.endPosition = new IntVector2D(newCursorX, newCursorY);
+            setState(MapViewState.SELECT_END);
 
-                this.path = solver.getShortestPathTo(this.solution.getNodes()
-                        .stream()
-                        .filter(node -> node.getPosition().equals(this.endPosition))
-                        .findAny()
-                        .get()
-                );
+            view.refreshMap();
+            view.repaint();
+        } else if(this.state.equals(MapViewState.SELECT_END)) {
+            this.endPosition = cursorPosition;
 
-                setState(MapViewState.SHOW_PATH);
-                this.view.getComputeButton().setEnabled(true);
+            this.path = solver.getShortestPathTo(this.solution.getNodes()
+                    .stream()
+                    .filter(node -> node.getPosition().equals(this.endPosition))
+                    .findAny()
+                    .get()
+            );
 
-                view.refreshMap();
-                view.repaint();
-            }
+            setState(MapViewState.SHOW_PATH);
+            this.view.getComputeButton().setEnabled(true);
 
+            view.refreshMap();
+            view.repaint();
         }
     }
 
@@ -106,8 +105,7 @@ public class MapController extends FullMouseController {
         int xPos = event.getX();
         int yPos = event.getY();
 
-        int newCursorX;
-        int newCursorY;
+        IntVector2D newCursor = null;
 
         boolean shouldPlace = false;
 
@@ -115,23 +113,21 @@ public class MapController extends FullMouseController {
                 && yPos > 32 && yPos < 32 + tileSize * this.view.getHeightMap().getSizeY()
         )
         {
-            newCursorX = (xPos - 32) / tileSize;
-            newCursorY = (yPos - 32) / tileSize;
+            newCursor = new IntVector2D((xPos - 32) / tileSize, (yPos - 32) / tileSize);
             shouldPlace = placeTile;
-        } else {
-            newCursorX = -1;
-            newCursorY = -1;
         }
 
         CursorRenderer cursor = view.getCursorRenderer();
 
-        if(newCursorY == cursor.getCursorY() && cursor.getCursorX() == newCursorX) return;
+        if(cursor.getPosition() == null && newCursor == null) return;
+        if(cursor.getPosition() != null && cursor.getPosition().equals(newCursor)) return;
 
-        cursor.setCursorX(newCursorX);
-        cursor.setCursorY(newCursorY);
+        System.out.println("LOL");
+
+        cursor.setPosition(newCursor);
 
         if(shouldPlace)
-            view.getHeightMap().getMap()[newCursorX][newCursorY] = view.getHeightSlider().getValue();
+            view.getHeightMap().setHeightAt(newCursor, view.getHeightSlider().getValue());
 
         view.repaint();
     }

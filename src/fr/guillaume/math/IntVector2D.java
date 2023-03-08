@@ -35,6 +35,7 @@ public class IntVector2D implements Cloneable
     }
 
     public boolean equals(final IntVector2D vector2D) {
+        if(vector2D == null) return false;
         return vector2D.getX() == this.x && vector2D.getY() == this.y;
     }
 

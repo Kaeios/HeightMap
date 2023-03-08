@@ -1,5 +1,6 @@
 package fr.guillaume.ui.rendering.tiles;
 
+import fr.guillaume.math.IntVector2D;
 import fr.guillaume.ui.rendering.Placeable;
 
 import javax.imageio.ImageIO;
@@ -21,14 +22,12 @@ public class CursorRenderer extends TiledRenderer implements Placeable {
         }
     }
 
-    private int cursorX = -1;
-    private int cursorY = -1;
+    private IntVector2D position;
 
-    public CursorRenderer(int cursorX, int cursorY, int tileSize) {
+    public CursorRenderer(IntVector2D position, int tileSize) {
         super(1, 1, 0, 0, tileSize);
 
-        this.cursorX = cursorX;
-        this.cursorY = cursorY;
+        this.position = position;
     }
 
     @Override
@@ -40,29 +39,21 @@ public class CursorRenderer extends TiledRenderer implements Placeable {
     @Override
     public void place(Graphics graphics) {
 
-        if(cursorY == -1 || cursorX == -1) return;
+        if(position == null) return;
 
         graphics.drawImage(render(),
-                tileSize/2 + getTilePositionFromXIndex(cursorX),
-                tileSize/2 + getTilePositionFromYIndex(cursorY),
+                tileSize/2 + getTilePositionFromXIndex(position.getX()),
+                tileSize/2 + getTilePositionFromYIndex(position.getY()),
                 null
         );
     }
 
-    public int getCursorX() {
-        return cursorX;
+    public IntVector2D getPosition() {
+        return position;
     }
 
-    public void setCursorX(int cursorX) {
-        this.cursorX = cursorX;
-    }
-
-    public int getCursorY() {
-        return cursorY;
-    }
-
-    public void setCursorY(int cursorY) {
-        this.cursorY = cursorY;
+    public void setPosition(IntVector2D position) {
+        this.position = position;
     }
 
 }

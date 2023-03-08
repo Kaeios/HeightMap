@@ -1,6 +1,6 @@
 package fr.guillaume.ui.controllers;
 
-import fr.guillaume.AppMain;
+import fr.guillaume.data.MapStorage;
 import fr.guillaume.math.graph.DjikstraSolver;
 import fr.guillaume.math.graph.Graph;
 import fr.guillaume.math.graph.Node;
@@ -17,6 +17,8 @@ import java.util.List;
 
 public class MapController implements MouseListener, MouseMotionListener, ActionListener {
 
+    private final MapStorage storage;
+
     private final MapView view;
     private ViewState state = ViewState.EDIT;
 
@@ -30,7 +32,8 @@ public class MapController implements MouseListener, MouseMotionListener, Action
     private DjikstraSolver solver;
     private List<Node> path = new LinkedList<>();
 
-    public MapController(MapView view) {
+    public MapController(MapStorage storage, MapView view) {
+        this.storage = storage;
         this.view = view;
     }
 
@@ -142,7 +145,7 @@ public class MapController implements MouseListener, MouseMotionListener, Action
             this.view.getEditButton().setEnabled(false);
         } else if(e.getSource().equals(view.getSaveButton())) {
             try {
-                AppMain.STORAGE.saveMap(view.getHeightMap());
+                this.storage.saveMap(this.view.getHeightMap());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }

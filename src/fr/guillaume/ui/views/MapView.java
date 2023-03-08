@@ -1,7 +1,8 @@
 package fr.guillaume.ui.views;
 
 import fr.guillaume.data.HeightMapDataHolder;
-import fr.guillaume.ui.components.ImageComponent;
+import fr.guillaume.data.MapStorage;
+import fr.guillaume.ui.components.RenderedComponent;
 import fr.guillaume.ui.controllers.MapController;
 import fr.guillaume.ui.rendering.OverlayRenderer;
 import fr.guillaume.ui.rendering.Placeable;
@@ -30,20 +31,20 @@ public class MapView extends JFrame {
     private JLabel helpText;
 
     private CursorRenderer cursorRenderer;
-    private ImageComponent mapComponent;
+    private RenderedComponent mapComponent;
 
-    public MapView(HeightMapDataHolder heightMap) {
+    public MapView(HeightMapDataHolder heightMap, final MapStorage storage) {
         super();
 
         this.heightMap = heightMap;
-        this.controller = new MapController(this);
+        this.controller = new MapController(storage, this);
 
         setupWindow();
         renderView();
     }
 
     public void setupWindow() {
-        setTitle("HeightMap : " + this.heightMap.getProjectName());
+        setTitle("Carte : " + this.heightMap.getProjectName());
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 800);
@@ -119,7 +120,7 @@ public class MapView extends JFrame {
     private void setupMapComponent() {
         cursorRenderer = new CursorRenderer(3, 4, TILE_SIZE);
 
-        mapComponent = new ImageComponent();
+        mapComponent = new RenderedComponent();
         mapComponent.setBounds(0, 0, 64 * 10 + 32, 64 * 10 + 32);
         add(mapComponent);
 

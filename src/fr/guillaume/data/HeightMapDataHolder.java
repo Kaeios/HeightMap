@@ -19,12 +19,15 @@ public class HeightMapDataHolder implements Cloneable {
 
     private final String projectName;
     private Image thumbnail;
+
+    private final IntVector2D size;
     private final int[][] map;
 
     public HeightMapDataHolder(String projectName, Image thumbnail, int[][] map) {
         this.projectName = projectName;
         this.thumbnail = thumbnail;
         this.map = map;
+        this.size = new IntVector2D(map.length, map[0].length);
     }
 
     public HeightMapDataHolder(String projectName, Image thumbnail) {
@@ -38,14 +41,6 @@ public class HeightMapDataHolder implements Cloneable {
     public Graph getGraph() {
         GraphGenerator generator = new GraphGenerator(map);
         return generator.getNodes();
-    }
-
-    public int getSizeX() {
-        return map.length;
-    }
-
-    public int getSizeY() {
-        return map[0].length;
     }
 
     public String getProjectName() {
@@ -77,6 +72,10 @@ public class HeightMapDataHolder implements Cloneable {
         for(int i = 0; i < arr.length; i++)
             clone[i] = arr[i].clone();
         return clone;
+    }
+
+    public IntVector2D getSize() {
+        return size;
     }
 
 }

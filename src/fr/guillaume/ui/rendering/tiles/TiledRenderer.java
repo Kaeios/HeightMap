@@ -1,42 +1,46 @@
 package fr.guillaume.ui.rendering.tiles;
 
 
+import fr.guillaume.math.IntVector2D;
 import fr.guillaume.ui.rendering.Renderer;
 
 import java.awt.image.BufferedImage;
 
 public abstract class TiledRenderer implements Renderer {
 
-    protected final int sizeX;
-    protected final int sizeY;
-
-    protected final int marginX;
-    protected final int marginY;
+    protected final IntVector2D size;
+    protected final IntVector2D margin;
 
     protected final int tileSize;
 
-    protected TiledRenderer(int sizeX, int sizeY, int marginX, int marginY, int tileSize) {
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
-        this.marginX = marginX;
-        this.marginY = marginY;
+    protected TiledRenderer(IntVector2D size, IntVector2D margin, int tileSize) {
+        this.size = size;
+        this.margin = margin;
         this.tileSize = tileSize;
     }
 
-    protected TiledRenderer(int sizeX, int sizeY, int tileSize) {
-        this(sizeX, sizeY, 0, 0, tileSize);
+    protected TiledRenderer(IntVector2D size, int tileSize) {
+        this(size, new IntVector2D(0, 0), tileSize);
+    }
+
+    protected IntVector2D toPixelPosition(IntVector2D position) {
+        return new IntVector2D(getTilePositionFromXIndex(position.getX()), getTilePositionFromYIndex(position.getY()));
     }
 
     protected int getTilePositionFromXIndex(int pos) {
-        return pos * tileSize + marginX;
+        return pos * tileSize + margin.getX();
     }
 
     protected int getTilePositionFromYIndex(int pos) {
-        return pos * tileSize + marginY;
+        return pos * tileSize + this.margin.getY();
     }
 
     public BufferedImage getRawImage() {
-        return new BufferedImage(marginX + sizeX * tileSize, marginY + sizeY * tileSize, BufferedImage.TYPE_INT_ARGB);
+        return new BufferedImage(
+                margin.getX() + size.getX() * tileSize,
+                margin.getY() + size.getY() * tileSize,
+                BufferedImage.TYPE_INT_ARGB
+        );
     }
 
 }

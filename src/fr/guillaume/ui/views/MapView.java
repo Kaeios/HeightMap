@@ -119,7 +119,7 @@ public class MapView extends JFrame {
     public void refreshMap() {
         List<Placeable> overlays = new LinkedList<>();
 
-        TileCanvasRenderer canvasRenderer = new TileCanvasRenderer(heightMap.getSizeX(), heightMap.getSizeY(), TILE_SIZE);
+        TileCanvasRenderer canvasRenderer = new TileCanvasRenderer(heightMap.getSize(), TILE_SIZE);
         TileMapRenderer mapRenderer = new TileMapRenderer(heightMap, TILE_SIZE);
 
         overlays.add(canvasRenderer);

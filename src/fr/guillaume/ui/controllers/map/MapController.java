@@ -49,8 +49,8 @@ public class MapController extends FullMouseController {
         int yPos = event.getY();
 
         // Si le curseur n'est pas sur la carte on ne fait rien
-        if(xPos <= 32 || xPos >= 32 + tileSize*this.view.getHeightMap().getSizeX()
-                || yPos <= 32 || yPos >= 32 + tileSize *this.view.getHeightMap().getSizeY()) return;
+        if(xPos <= 32 || xPos >= 32 + tileSize*this.view.getHeightMap().getSize().getX()
+                || yPos <= 32 || yPos >= 32 + tileSize *this.view.getHeightMap().getSize().getY()) return;
 
         // On récupère la position de la case sur laquelle se trouve la souris
         IntVector2D cursorPosition = new IntVector2D((xPos - 32) / tileSize, (yPos - 32) / tileSize);
@@ -109,8 +109,8 @@ public class MapController extends FullMouseController {
 
         boolean shouldPlace = false;
 
-        if(xPos > 32 && xPos < 32 + tileSize * this.view.getHeightMap().getSizeX()
-                && yPos > 32 && yPos < 32 + tileSize * this.view.getHeightMap().getSizeY()
+        if(xPos > 32 && xPos < 32 + tileSize * this.view.getHeightMap().getSize().getX()
+                && yPos > 32 && yPos < 32 + tileSize * this.view.getHeightMap().getSize().getY()
         )
         {
             newCursor = new IntVector2D((xPos - 32) / tileSize, (yPos - 32) / tileSize);
@@ -187,7 +187,7 @@ public class MapController extends FullMouseController {
             PathWeightRenderer weightRenderer = new PathWeightRenderer(solution.getWeightMap(), 64);
             overlays.add(weightRenderer);
         } else if(this.getState().equals(MapViewState.SHOW_PATH)) {
-            PathRenderer pathRenderer = new PathRenderer(this.path, this.view.getHeightMap().getSizeX(), this.view.getHeightMap().getSizeY(), 64);
+            PathRenderer pathRenderer = new PathRenderer(this.path, this.view.getHeightMap().getSize(), 64);
             overlays.add(pathRenderer);
         }
 

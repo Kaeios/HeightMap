@@ -1,6 +1,7 @@
 package fr.guillaume.ui.rendering.tiles;
 
 import fr.guillaume.data.HeightMapDataHolder;
+import fr.guillaume.math.IntVector2D;
 import fr.guillaume.ui.rendering.Placeable;
 import fr.guillaume.ui.texturing.TileType;
 
@@ -46,7 +47,7 @@ public class TileMapRenderer extends TiledRenderer implements Placeable {
     private final HeightMapDataHolder mapData;
 
     public TileMapRenderer(HeightMapDataHolder mapData, int tileSize) {
-        super(mapData.getSizeX(), mapData.getSizeY(), tileSize);
+        super(mapData.getSize(), tileSize);
 
         this.mapData = mapData;
     }
@@ -63,41 +64,42 @@ public class TileMapRenderer extends TiledRenderer implements Placeable {
 
             Color color = getHeightMapColor((float) (level - MIN_LEVEL) / (MAX_LEVEL - MIN_LEVEL));
 
-            for (int xPos = 0; xPos < mapData.getSizeX(); xPos++) {
-                for (int yPos = 0; yPos < mapData.getSizeY(); yPos++) {
+            for (int yPos = 0; yPos < mapData.getSize().getX(); yPos++) {
+                for (int xPos = 0; xPos < mapData.getSize().getY(); xPos++) {
+                    IntVector2D position = new IntVector2D(xPos, yPos);
                     int tileCode = 0;
 
-                    int height = mapData.getMap()[yPos][xPos];
+                    int height = mapData.getHeightAt(position);
                     if(height < level) continue;
 
                     height = Math.min(level, height);
 
-                    if(yPos - 1 < 0 || mapData.getMap()[yPos-1][xPos] < height)
+                    if(xPos - 1 < 0 || mapData.getMap()[xPos-1][yPos] < height)
                         tileCode |= TileType.WEST;
 
-                    if(xPos - 1 < 0 || mapData.getMap()[yPos][xPos - 1] < height)
+                    if(yPos - 1 < 0 || mapData.getMap()[xPos][yPos - 1] < height)
                         tileCode |= TileType.NORTH;
 
-                    if(yPos + 1 >= mapData.getSizeY() || mapData.getMap()[yPos + 1][xPos] < height)
+                    if(xPos + 1 >= mapData.getSize().getY() || mapData.getMap()[xPos + 1][yPos] < height)
                         tileCode |= TileType.EAST;
 
-                    if(xPos + 1 >= mapData.getSizeX() || mapData.getMap()[yPos][xPos + 1] < height)
+                    if(yPos + 1 >= mapData.getSize().getX() || mapData.getMap()[xPos][yPos + 1] < height)
                         tileCode |= TileType.SOUTH;
 
                     BufferedImage image = TILES[tileCode];
 
                     if(tileCode == 0) {
 
-                        if(mapData.getMap()[yPos - 1][xPos - 1] < level)
+                        if(mapData.getMap()[xPos - 1][yPos - 1] < level)
                             tileCode |= TileType.CORNER_NORTH_WEST;
 
-                        if(mapData.getMap()[yPos + 1][xPos - 1] < level)
+                        if(mapData.getMap()[xPos + 1][yPos - 1] < level)
                             tileCode |= TileType.CORNER_NORTH_EAST;
 
-                        if(mapData.getMap()[yPos - 1][xPos + 1] < level)
+                        if(mapData.getMap()[xPos - 1][yPos + 1] < level)
                             tileCode |= TileType.CORNER_SOUTH_EAST;
 
-                        if(mapData.getMap()[yPos + 1][xPos + 1] < level)
+                        if(mapData.getMap()[xPos + 1][yPos + 1] < level)
                             tileCode |= TileType.CORNER_SOUTH_WEST;
 
                         image = CORNER_TILES[tileCode];
@@ -108,10 +110,12 @@ public class TileMapRenderer extends TiledRenderer implements Placeable {
                     Composite comp = AlphaComposite.getInstance(rule , 1.0f );
                     graphics.setComposite(comp);
 
+                    IntVector2D imagePosition = toPixelPosition(position);
+
                     graphics.drawImage(
                             colorImage(image, color),
-                            getTilePositionFromYIndex(yPos),
-                            getTilePositionFromXIndex(xPos),
+                            imagePosition.getX(),
+                            imagePosition.getY(),
                             null
                     );
                 }

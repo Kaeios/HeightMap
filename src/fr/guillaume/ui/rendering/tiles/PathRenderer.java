@@ -15,8 +15,8 @@ public class PathRenderer extends TiledRenderer implements Placeable {
     private final List<Node> path;
 
 
-    public PathRenderer(List<Node> path, int sizeX, int sizeY, int tileSize) {
-        super(sizeX, sizeY, tileSize);
+    public PathRenderer(List<Node> path, IntVector2D size, int tileSize) {
+        super(size, tileSize);
 
         this.path = path;
     }
@@ -44,13 +44,18 @@ public class PathRenderer extends TiledRenderer implements Placeable {
             IntVector2D currentPosition = current.getPosition();
             IntVector2D lastPosition = lastNode.getPosition();
 
-            int centerCurrentX = getTilePositionFromXIndex(currentPosition.getX()) + tileSize/2;
-            int centerCurrentY = getTilePositionFromYIndex(currentPosition.getY()) + tileSize/2;
+            IntVector2D centerCurrent = toPixelPosition(currentPosition);
+            centerCurrent.add(new IntVector2D(tileSize/2, tileSize/2));
 
-            int centerNextX = getTilePositionFromXIndex(lastPosition.getX()) + tileSize/2;
-            int centerNextY = getTilePositionFromYIndex(lastPosition.getY()) + tileSize/2;
+            IntVector2D centerLast = toPixelPosition(lastPosition);
+            centerCurrent.add(new IntVector2D(tileSize/2, tileSize/2));
 
-            graphics.drawLine(centerNextX, centerNextY, centerCurrentX, centerCurrentY);
+            graphics.drawLine(
+                    centerLast.getX(),
+                    centerLast.getY(),
+                    centerCurrent.getX(),
+                    centerCurrent.getY()
+            );
 
             lastNode = current;
         }

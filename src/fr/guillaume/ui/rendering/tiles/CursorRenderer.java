@@ -25,7 +25,7 @@ public class CursorRenderer extends TiledRenderer implements Placeable {
     private IntVector2D position;
 
     public CursorRenderer(IntVector2D position, int tileSize) {
-        super(1, 1, 0, 0, tileSize);
+        super(new IntVector2D(1, 1), tileSize);
 
         this.position = position;
     }
@@ -41,9 +41,13 @@ public class CursorRenderer extends TiledRenderer implements Placeable {
 
         if(position == null) return;
 
-        graphics.drawImage(render(),
-                tileSize/2 + getTilePositionFromXIndex(position.getX()),
-                tileSize/2 + getTilePositionFromYIndex(position.getY()),
+        IntVector2D imagePosition = toPixelPosition(position);
+        imagePosition.add(new IntVector2D(tileSize/2, tileSize/2));
+
+        graphics.drawImage(
+                render(),
+                imagePosition.getX(),
+                imagePosition.getY(),
                 null
         );
     }

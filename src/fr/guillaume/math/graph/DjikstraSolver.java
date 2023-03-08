@@ -5,9 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-public class DjikstraSolver {
+public class DjikstraSolver extends Solver {
 
     public DjikstraSolver(Graph graph, Node origin) {
+        super(graph, origin);
         calculateShortestPathFromSource(graph, origin);
     }
 
@@ -58,12 +59,14 @@ public class DjikstraSolver {
         return graph;
     }
 
+    @Override
     public List<Node> getShortestPathTo(Node other) {
         List<Node> path = new LinkedList<>(other.getShortestPath());
         path.add(other);
         return path;
     }
 
+    @Override
     public int getShortestPathCostTo(Node other) {
         return other.getDistance();
     }

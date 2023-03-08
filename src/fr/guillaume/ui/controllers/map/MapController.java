@@ -65,7 +65,7 @@ public class MapController extends FullMouseController {
                         this.solution,
                         this.solution.getNodes()
                                 .stream()
-                                .filter(node -> node.getPosition() == this.startPosition).findAny().get()
+                                .filter(node -> node.getPosition().equals(this.startPosition)).findAny().get()
                 );
 
                 setState(MapViewState.SELECT_END);
@@ -77,7 +77,7 @@ public class MapController extends FullMouseController {
 
                 this.path = solver.getShortestPathTo(this.solution.getNodes()
                         .stream()
-                        .filter(node -> node.getPosition() == this.endPosition)
+                        .filter(node -> node.getPosition().equals(this.endPosition))
                         .findAny()
                         .get()
                 );

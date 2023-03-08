@@ -1,11 +1,10 @@
 package fr.guillaume.ui.controllers;
 
 import fr.guillaume.data.MapStorage;
-import fr.guillaume.math.graph.solving.BacktrackSolver;
-import fr.guillaume.math.graph.solving.DjikstraSolver;
 import fr.guillaume.math.graph.Graph;
 import fr.guillaume.math.graph.Node;
 import fr.guillaume.math.graph.solving.Solver;
+import fr.guillaume.math.graph.solving.SolverType;
 import fr.guillaume.ui.rendering.Placeable;
 import fr.guillaume.ui.rendering.tiles.CursorRenderer;
 import fr.guillaume.ui.rendering.tiles.PathRenderer;
@@ -21,6 +20,7 @@ import java.util.List;
 public class MapController implements MouseListener, MouseMotionListener, ActionListener {
 
     private final MapStorage storage;
+    private final SolverType solverType = SolverType.BACKTRACK;
 
     private final MapView view;
     private ViewState state = ViewState.EDIT;
@@ -60,7 +60,8 @@ public class MapController implements MouseListener, MouseMotionListener, Action
                 this.startY = newCursorY;
 
                 this.solution = this.view.getHeightMap().getGraph();
-                solver = new DjikstraSolver(this.solution,
+                this.solver = solverType.get(
+                        this.solution,
                         this.solution.getNodes().stream().filter(node -> node.getxPos() == this.startX && node.getyPos() == this.startY).findAny().get()
                 );
 
@@ -185,7 +186,7 @@ public class MapController implements MouseListener, MouseMotionListener, Action
 
     public List<Placeable> getStateOverlay() {
         List<Placeable> overlays = new LinkedList<>();
-        if(this.getState().equals(ViewState.SELECT_END)) {
+        if(this.getState().equals(ViewState.SELECT_END) && solver != null && solver.isFast()) {
             PathWeightRenderer weightRenderer = new PathWeightRenderer(solution.getWeightMap(), 64);
             overlays.add(weightRenderer);
         } else if(this.getState().equals(ViewState.SHOW_PATH)) {

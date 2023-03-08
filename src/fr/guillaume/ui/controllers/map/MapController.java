@@ -1,10 +1,11 @@
-package fr.guillaume.ui.controllers;
+package fr.guillaume.ui.controllers.map;
 
 import fr.guillaume.data.MapStorage;
 import fr.guillaume.math.graph.Graph;
 import fr.guillaume.math.graph.Node;
 import fr.guillaume.math.graph.solving.Solver;
 import fr.guillaume.math.graph.solving.SolverType;
+import fr.guillaume.ui.controllers.FullMouseController;
 import fr.guillaume.ui.rendering.Placeable;
 import fr.guillaume.ui.rendering.tiles.CursorRenderer;
 import fr.guillaume.ui.rendering.tiles.PathRenderer;
@@ -17,13 +18,15 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MapController implements MouseListener, MouseMotionListener, ActionListener {
+public class MapController extends FullMouseController implements ActionListener {
+
+    private final int tileSize;
 
     private final MapStorage storage;
     private final SolverType solverType = SolverType.DJIKSTRA;
 
     private final MapView view;
-    private ViewState state = ViewState.EDIT;
+    private MapViewState state = MapViewState.EDIT;
 
     private int startX = -1;
     private int startY = -1;
@@ -35,27 +38,27 @@ public class MapController implements MouseListener, MouseMotionListener, Action
     private Solver solver;
     private List<Node> path = new LinkedList<>();
 
-    public MapController(MapStorage storage, MapView view) {
+    public MapController(MapStorage storage, MapView view, int tileSize) {
         this.storage = storage;
         this.view = view;
+        this.tileSize = tileSize;
     }
-
-    @Override
-    public void mouseClicked(MouseEvent e) { }
 
     @Override
     public void mousePressed(MouseEvent event) {
         int xPos = event.getX();
         int yPos = event.getY();
 
-        if(xPos > 32 && xPos < 32 + 64*10 && yPos > 32 && yPos < 32 + 64 * 10) {
-            int newCursorX = (xPos - 32) / 64;
-            int newCursorY = (yPos - 32) / 64;
+        if(xPos > 32 && xPos < 32 + tileSize*this.view.getHeightMap().getSizeX()
+                && yPos > 32 && yPos < 32 + tileSize *this.view.getHeightMap().getSizeY())
+        {
+            int newCursorX = (xPos - 32) / tileSize;
+            int newCursorY = (yPos - 32) / tileSize;
 
-            if(this.state.equals(ViewState.EDIT)) {
+            if(this.state.equals(MapViewState.EDIT)) {
                 view.getHeightMap().getMap()[newCursorX][newCursorY] = view.getHeightSlider().getValue();
                 view.repaint();
-            } else if(this.state.equals(ViewState.SELECT_START)){
+            } else if(this.state.equals(MapViewState.SELECT_START)){
                 this.startX = newCursorX;
                 this.startY = newCursorY;
 
@@ -65,18 +68,22 @@ public class MapController implements MouseListener, MouseMotionListener, Action
                         this.solution.getNodes().stream().filter(node -> node.getxPos() == this.startX && node.getyPos() == this.startY).findAny().get()
                 );
 
-                setState(ViewState.SELECT_END);
+                setState(MapViewState.SELECT_END);
 
                 view.refreshMap();
                 view.repaint();
-            } else if(this.state.equals(ViewState.SELECT_END)) {
+            } else if(this.state.equals(MapViewState.SELECT_END)) {
                 this.endX = newCursorX;
                 this.endY = newCursorY;
 
-                this.path = solver.getShortestPathTo(this.solution.getNodes().stream().filter(node -> node.getxPos() == this.endX && node.getyPos() == this.endY).findAny().get());
-//                this.path = new BacktrackSolver(this.view.getHeightMap().getGraph(), this.solution.getNodes().stream().filter(node -> node.getxPos() == this.startX && node.getyPos() == this.startY).findAny().get())
-//                        .getShortestPathTo(this.solution.getNodes().stream().filter(node -> node.getxPos() == this.endX && node.getyPos() == this.endY).findAny().get());
-                setState(ViewState.SHOW_PATH);
+                this.path = solver.getShortestPathTo(this.solution.getNodes()
+                        .stream()
+                        .filter(node -> node.getxPos() == this.endX && node.getyPos() == this.endY)
+                        .findAny()
+                        .get()
+                );
+
+                setState(MapViewState.SHOW_PATH);
                 this.view.getComputeButton().setEnabled(true);
 
                 view.refreshMap();
@@ -87,17 +94,8 @@ public class MapController implements MouseListener, MouseMotionListener, Action
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) { }
-
-    @Override
-    public void mouseEntered(MouseEvent e) { }
-
-    @Override
-    public void mouseExited(MouseEvent e) { }
-
-    @Override
     public void mouseDragged(MouseEvent e) {
-        handleMouse(e, this.getState().equals(ViewState.EDIT));
+        handleMouse(e, this.getState().equals(MapViewState.EDIT));
     }
 
     @Override
@@ -114,9 +112,12 @@ public class MapController implements MouseListener, MouseMotionListener, Action
 
         boolean shouldPlace = false;
 
-        if(xPos > 32 && xPos < 32 + 64*10 && yPos > 32 && yPos < 32 + 64 * 10) {
-            newCursorX = (xPos - 32) / 64;
-            newCursorY = (yPos - 32) / 64;
+        if(xPos > 32 && xPos < 32 + tileSize * this.view.getHeightMap().getSizeX()
+                && yPos > 32 && yPos < 32 + tileSize * this.view.getHeightMap().getSizeY()
+        )
+        {
+            newCursorX = (xPos - 32) / tileSize;
+            newCursorY = (yPos - 32) / tileSize;
             shouldPlace = placeTile;
         } else {
             newCursorX = -1;
@@ -139,12 +140,12 @@ public class MapController implements MouseListener, MouseMotionListener, Action
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(view.getComputeButton())) {
-            setState(ViewState.SELECT_START);
+            setState(MapViewState.SELECT_START);
             this.view.getEditButton().setEnabled(true);
             this.view.getHeightSlider().setEnabled(false);
             view.getComputeButton().setEnabled(false);
         } else if(e.getSource().equals(view.getEditButton())) {
-            setState(ViewState.EDIT);
+            setState(MapViewState.EDIT);
             this.view.getComputeButton().setEnabled(true);
             this.view.getHeightSlider().setEnabled(true);
             this.view.getEditButton().setEnabled(false);
@@ -167,29 +168,16 @@ public class MapController implements MouseListener, MouseMotionListener, Action
         view.repaint();
     }
 
-    public ViewState getState() {
+    public MapViewState getState() {
         return state;
-    }
-
-    public enum ViewState {
-        EDIT("(!) Cliquez sur la carte pour placer des tuiles"),
-        SELECT_START("(!) Sélectionnez un point de départ"),
-        SELECT_END("(!) Sélectionnez un point de d'arrivé"),
-        SHOW_PATH("(!) Sélectionnez une action à effectuer");
-
-        private final String helpText;
-
-        ViewState(String helpText) {
-            this.helpText = helpText;
-        }
     }
 
     public List<Placeable> getStateOverlay() {
         List<Placeable> overlays = new LinkedList<>();
-        if(this.getState().equals(ViewState.SELECT_END) && solver != null && solver.isFast()) {
+        if(this.getState().equals(MapViewState.SELECT_END) && solver != null && solver.isFast()) {
             PathWeightRenderer weightRenderer = new PathWeightRenderer(solution.getWeightMap(), 64);
             overlays.add(weightRenderer);
-        } else if(this.getState().equals(ViewState.SHOW_PATH)) {
+        } else if(this.getState().equals(MapViewState.SHOW_PATH)) {
             PathRenderer pathRenderer = new PathRenderer(this.path, this.view.getHeightMap().getSizeX(), this.view.getHeightMap().getSizeY(), 64);
             overlays.add(pathRenderer);
         }
@@ -197,10 +185,9 @@ public class MapController implements MouseListener, MouseMotionListener, Action
         return overlays;
     }
 
-    public void setState(ViewState state) {
+    public void setState(MapViewState state) {
         this.state = state;
-
-        this.view.getHelpText().setText(state.helpText);
+        this.view.getHelpText().setText(state.getHelpText());
     }
 
 }

@@ -3,7 +3,7 @@ package fr.guillaume.ui.views;
 import fr.guillaume.data.HeightMapDataHolder;
 import fr.guillaume.data.MapStorage;
 import fr.guillaume.ui.components.RenderedComponent;
-import fr.guillaume.ui.controllers.MapController;
+import fr.guillaume.ui.controllers.map.MapController;
 import fr.guillaume.ui.rendering.OverlayRenderer;
 import fr.guillaume.ui.rendering.Placeable;
 import fr.guillaume.ui.rendering.tiles.CursorRenderer;
@@ -38,7 +38,7 @@ public class MapView extends JFrame {
         super();
 
         this.heightMap = heightMap;
-        this.controller = new MapController(storage, this);
+        this.controller = new MapController(storage, this, TILE_SIZE);
 
         setupWindow();
         renderView();

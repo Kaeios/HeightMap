@@ -122,8 +122,6 @@ public class MapController extends FullMouseController {
         if(cursor.getPosition() == null && newCursor == null) return;
         if(cursor.getPosition() != null && cursor.getPosition().equals(newCursor)) return;
 
-        System.out.println("LOL");
-
         cursor.setPosition(newCursor);
 
         if(shouldPlace)

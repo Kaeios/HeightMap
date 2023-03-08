@@ -31,7 +31,7 @@ public class PathRenderer extends TiledRenderer implements Placeable {
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
-        graphics.setStroke(new BasicStroke(tileSize/4));
+        graphics.setStroke(new BasicStroke(tileSize/4.0f));
         graphics.setColor(new Color(0xff, 0x52, 0x52));
 
         Iterator<Node> pathIterator = path.iterator();

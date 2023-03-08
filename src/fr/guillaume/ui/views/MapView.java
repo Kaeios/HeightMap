@@ -21,23 +21,26 @@ public class MapView extends JFrame {
     private final HeightMapDataHolder heightMap;
 
     private final MapController controller;
+    private final LoadMapView loadMapView;
 
     private JSlider heightSlider;
 
     private JButton editButton;
     private JButton computeButton;
     private JButton saveButton;
+    private JButton loadButton;
 
     private JLabel helpText;
 
     private CursorRenderer cursorRenderer;
     private RenderedComponent mapComponent;
 
-    public MapView(HeightMapDataHolder heightMap, final MapStorage storage) {
+    public MapView(HeightMapDataHolder heightMap, final MapStorage storage, LoadMapView loadMapView) {
         super();
 
         this.heightMap = heightMap;
         this.controller = new MapController(storage, this);
+        this.loadMapView = loadMapView;
 
         setupWindow();
         renderView();
@@ -58,6 +61,7 @@ public class MapView extends JFrame {
         setupComputeButton();
         setupEditButton();
         setupSaveButton();
+        setupLoadButton();
         setupHelpText();
     }
 
@@ -100,6 +104,13 @@ public class MapView extends JFrame {
         editButton.setEnabled(false);
         add(editButton);
         editButton.addActionListener(controller);
+    }
+
+    private void setupLoadButton() {
+        loadButton = new JButton("Charger");
+        loadButton.setBounds( 132 * 3 + 32 * 4, 700, 132, 50);
+        add(loadButton);
+        loadButton.addActionListener(controller);
     }
 
     public void refreshMap() {
@@ -156,8 +167,15 @@ public class MapView extends JFrame {
         return saveButton;
     }
 
+    public JButton getLoadButton() {
+        return loadButton;
+    }
+
     public JLabel getHelpText() {
         return helpText;
     }
 
+    public LoadMapView getLoadMapView() {
+        return loadMapView;
+    }
 }

@@ -1,13 +1,13 @@
 package fr.guillaume.ui.components;
 
-import fr.guillaume.ui.rendering.OverlayRenderer;
+import fr.guillaume.ui.rendering.Renderer;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class RenderedComponent extends JPanel {
 
-    private OverlayRenderer renderer;
+    private Renderer renderer;
 
     public RenderedComponent() {
         super();
@@ -24,7 +24,7 @@ public class RenderedComponent extends JPanel {
         g.drawImage(image, 0, 0, component.getWidth(), component.getHeight(), component);
     }
 
-    public void setRenderer(OverlayRenderer renderer) {
+    public void setRenderer(Renderer renderer) {
         this.renderer = renderer;
     }
 

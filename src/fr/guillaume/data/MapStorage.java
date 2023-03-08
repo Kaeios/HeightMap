@@ -6,8 +6,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +16,7 @@ public class MapStorage {
     private static final String THUMBNAIL_FILE_NAME = "thumbnail.png";
     private static final String MAP_FILE_NAME = "map.dat";
 
-    private final List<HeightMapDataHolder> loadedMaps = new LinkedList<>();
+    private final Map<String, HeightMapDataHolder> loadedMaps = new LinkedHashMap<>();
 
     public MapStorage() {
 
@@ -51,11 +50,12 @@ public class MapStorage {
             Image thumbnailImage = ImageIO.read(thumbnail);
 
             HeightMapDataHolder newMap = new HeightMapDataHolder(mapName, thumbnailImage, heightMap);
-            this.loadedMaps.add(newMap);
+            this.loadedMaps.put(newMap.getProjectName(), newMap);
         }
     }
 
     public void saveMap(HeightMapDataHolder map) throws IOException {
+        this.loadedMaps.put(map.getProjectName(), map);
         File mapFolder = new File(DATA_FOLDER, map.getProjectName());
 
         if(!mapFolder.exists())
@@ -78,8 +78,12 @@ public class MapStorage {
         writer.close();
     }
 
+    public HeightMapDataHolder getMap(String id) {
+        return loadedMaps.get(id).clone();
+    }
+
     public List<HeightMapDataHolder> getMaps() {
-        return loadedMaps;
+        return new LinkedList<>(loadedMaps.values());
     }
 
 }

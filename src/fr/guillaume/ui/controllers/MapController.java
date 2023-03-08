@@ -149,6 +149,12 @@ public class MapController implements MouseListener, MouseMotionListener, Action
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
+        } else if(e.getSource().equals(view.getLoadButton())) {
+            this.view.setVisible(false);
+            this.view.removeAll();
+            this.view.setEnabled(false);
+            this.view.getLoadMapView().repaint();
+            this.view.getLoadMapView().setVisible(true);
         }
 
         view.refreshMap();

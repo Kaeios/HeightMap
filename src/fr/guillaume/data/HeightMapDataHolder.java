@@ -6,7 +6,7 @@ import fr.guillaume.math.graph.GraphGenerator;
 import java.awt.*;
 import java.util.Arrays;
 
-public class HeightMapDataHolder {
+public class HeightMapDataHolder implements Cloneable {
 
     private static final int[][] DEFAULT_HEIGHT_MAP = new int[10][10];
 
@@ -57,6 +57,17 @@ public class HeightMapDataHolder {
 
     public void setThumbnail(Image thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public HeightMapDataHolder clone() {
+        return new HeightMapDataHolder(projectName, thumbnail, cloneArray(map));
+    }
+
+    private static int[][] cloneArray(int[][] arr) {
+        int [][] clone = new int[arr.length][];
+        for(int i = 0; i < arr.length; i++)
+            clone[i] = arr[i].clone();
+        return clone;
     }
 
 }

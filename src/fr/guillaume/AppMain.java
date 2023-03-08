@@ -12,11 +12,6 @@ public class AppMain {
         MapStorage storage = new MapStorage();
         storage.initStorage();
 
-//        HeightMapDataHolder map = STORAGE.getMaps().get(0);
-//
-//        MapView mainFrame = new MapView(map);
-//        mainFrame.setVisible(true);
-
         LoadMapView loadView = new LoadMapView(storage);
         loadView.setVisible(true);
     }

@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,12 +79,30 @@ public class MapStorage {
         writer.close();
     }
 
+    public void delete(HeightMapDataHolder map) {
+        this.loadedMaps.remove(map.getProjectName());
+        File mapFolder = new File(DATA_FOLDER, map.getProjectName());
+        if(!mapFolder.exists()) return;
+        deleteFolder(mapFolder);
+        mapFolder.delete();
+    }
+
     public HeightMapDataHolder getMap(String id) {
         return loadedMaps.get(id).clone();
     }
 
     public List<HeightMapDataHolder> getMaps() {
         return new LinkedList<>(loadedMaps.values());
+    }
+
+    private static void deleteFolder(File file) {
+        File[] contents = file.listFiles();
+        if (contents != null) {
+            for (File f : contents) {
+                deleteFolder(f);
+            }
+        }
+        file.delete();
     }
 
 }

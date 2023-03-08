@@ -39,15 +39,27 @@ public class LoadMapView extends JFrame {
             component.setBounds(30 + i * 230, 30, 200, 200);
             add(component);
 
-            JButton button = new JButton("Charger");
-            button.setBounds(30 + i*230, 230, 200, 30);
+            JButton loadButton = new JButton("Charger");
+            loadButton.setBounds(30 + i*230, 230, 200, 30);
 
-            button.addActionListener(event -> {
+            loadButton.addActionListener(event -> {
                 MapView mapEditor = new MapView(storage.getMap(savedMap.getProjectName()), storage, this);
                 setVisible(false);
                 mapEditor.setVisible(true);
             });
-            add(button);
+            add(loadButton);
+
+            JButton deleteButton = new JButton("Supprimer");
+            deleteButton.setBounds(30 + i*230, 260, 200, 30);
+            deleteButton.addActionListener(event -> {
+                removeAll();
+                setVisible(false);
+                storage.delete(savedMap);
+                LoadMapView newView = new LoadMapView(storage);
+                newView.setVisible(true);
+            });
+
+            add(deleteButton);
         }
     }
 

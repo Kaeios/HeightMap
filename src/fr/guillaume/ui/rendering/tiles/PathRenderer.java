@@ -48,13 +48,13 @@ public class PathRenderer extends TiledRenderer implements Placeable {
             centerCurrent.add(new IntVector2D(tileSize/2, tileSize/2));
 
             IntVector2D centerLast = toPixelPosition(lastPosition);
-            centerCurrent.add(new IntVector2D(tileSize/2, tileSize/2));
+            centerLast.add(new IntVector2D(tileSize/2, tileSize/2));
 
             graphics.drawLine(
-                    centerLast.getX(),
-                    centerLast.getY(),
                     centerCurrent.getX(),
-                    centerCurrent.getY()
+                    centerCurrent.getY(),
+                    centerLast.getX(),
+                    centerLast.getY()
             );
 
             lastNode = current;

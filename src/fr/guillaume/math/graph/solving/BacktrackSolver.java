@@ -10,6 +10,8 @@ public class BacktrackSolver extends Solver {
 
     private final Map<Node, List<Node>> cachedPaths = new HashMap<>();
 
+    private int maxCost = Integer.MAX_VALUE;
+
     public BacktrackSolver(Graph graph, Node origin) {
         super(graph, origin);
     }
@@ -49,10 +51,11 @@ public class BacktrackSolver extends Solver {
     private void performBackTrack(Node dest) {
         Stack<Node> path = new Stack<>();
         path.push(origin);
-        isValid(path, 0, Integer.MAX_VALUE, dest);
+        maxCost = Integer.MAX_VALUE;
+        isValid(path, 0, dest);
     }
 
-    private boolean isValid(Stack<Node> path, int currentPathCost, int maxCost, Node dest) {
+    private boolean isValid(Stack<Node> path, int currentPathCost, Node dest) {
         if(path.isEmpty()) return false;
         if(currentPathCost >= maxCost) return false;
 
@@ -61,7 +64,9 @@ public class BacktrackSolver extends Solver {
 
         if(head.equals(dest)) {
             cachedPaths.put(dest, new ArrayList<>(path));
-            return isValid(path, currentPathCost, currentPathCost, dest);
+            System.out.println(currentPathCost);
+            this.maxCost = currentPathCost;
+            return isValid(path, currentPathCost, dest);
         }
 
         for (Edge edge : head.getEdges()) {
@@ -70,7 +75,7 @@ public class BacktrackSolver extends Solver {
             }
             path.push(edge.getDestination());
 
-            if(isValid(path, currentPathCost + edge.getWeight(), maxCost, dest)) {
+            if(isValid(path, currentPathCost + edge.getWeight(), dest)) {
                 return true;
             }
 

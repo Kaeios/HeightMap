@@ -163,12 +163,6 @@ public class MapController extends FullMouseController {
 
     @ButtonHandler(targetId = "load")
     public void onPressLoadButton() {
-        try {
-            this.storage.saveMap(this.view.getHeightMap());
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
-
         this.view.setVisible(false);
         this.view.removeAll();
         this.view.setEnabled(false);

@@ -23,7 +23,7 @@ public class MapStorage {
 
     }
 
-    public void initStorage() throws IOException {
+    public void initStorage() {
         if(!DATA_FOLDER.exists())
             DATA_FOLDER.mkdirs();
 
@@ -39,19 +39,22 @@ public class MapStorage {
             File mapFile = new File(mapFolder, MAP_FILE_NAME);
             if(!mapFile.exists()) continue;
 
-            BufferedReader reader = new BufferedReader(new FileReader(mapFile));
+            try (BufferedReader reader = new BufferedReader(new FileReader(mapFile))){
+                int[][] heightMap = new int[10][10];
 
-            int[][] heightMap = new int[10][10];
+                List<String> lines = reader.lines().collect(Collectors.toList());
+                for (int i = 0; i < lines.size(); i++) {
+                    heightMap[i] = Arrays.stream(lines.get(i).split(" ")).mapToInt(Integer::parseInt).toArray();
+                }
 
-            List<String> lines = reader.lines().collect(Collectors.toList());
-            for (int i = 0; i < lines.size(); i++) {
-                heightMap[i] = Arrays.stream(lines.get(i).split(" ")).mapToInt(Integer::parseInt).toArray();
+                Image thumbnailImage = ImageIO.read(thumbnail);
+
+                HeightMapDataHolder newMap = new HeightMapDataHolder(mapName, thumbnailImage, heightMap);
+                this.loadedMaps.put(newMap.getProjectName(), newMap);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-            Image thumbnailImage = ImageIO.read(thumbnail);
-
-            HeightMapDataHolder newMap = new HeightMapDataHolder(mapName, thumbnailImage, heightMap);
-            this.loadedMaps.put(newMap.getProjectName(), newMap);
         }
     }
 
@@ -71,12 +74,13 @@ public class MapStorage {
         if(!mapFolder.exists())
             mapFile.createNewFile();
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter(mapFile));
-        for (int[] line : map.getMap()) {
-            writer.write(Arrays.stream(line).mapToObj(String::valueOf).collect(Collectors.joining(" ")) + "\n");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(mapFile))){
+            for (int[] line : map.getMap()) {
+                writer.write(Arrays.stream(line).mapToObj(String::valueOf).collect(Collectors.joining(" ")) + "\n");
+            }
+
+            writer.flush();
         }
-        writer.flush();
-        writer.close();
     }
 
     public void delete(HeightMapDataHolder map) {

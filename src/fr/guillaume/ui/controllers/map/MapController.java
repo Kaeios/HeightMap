@@ -25,7 +25,7 @@ public class MapController extends FullMouseController {
     private final int tileSize;
 
     private final MapStorage storage;
-    private final SolverType solverType = SolverType.DJIKSTRA;
+    private final SolverType solverType = SolverType.BACKTRACK;
 
     private final MapView view;
     private MapViewState state = MapViewState.EDIT;
@@ -181,6 +181,7 @@ public class MapController extends FullMouseController {
             PathWeightRenderer weightRenderer = new PathWeightRenderer(solution.getWeightMap(), 64);
             overlays.add(weightRenderer);
         } else if(this.getState().equals(MapViewState.SHOW_PATH)) {
+            if(this.path.isEmpty()) return overlays;
             PathRenderer pathRenderer = new PathRenderer(this.path, this.view.getHeightMap().getSize(), 64);
             overlays.add(pathRenderer);
         }

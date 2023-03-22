@@ -5,6 +5,7 @@ import fr.guillaume.math.graph.Graph;
 import fr.guillaume.math.graph.Node;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BacktrackSolver extends Solver {
 
@@ -19,7 +20,7 @@ public class BacktrackSolver extends Solver {
     @Override
     public List<Node> getShortestPathTo(Node node) {
         if(!cachedPaths.containsKey(node))
-            performBackTrack(node);
+            computeBackTrack(node);
         return cachedPaths.get(node);
     }
 
@@ -48,41 +49,39 @@ public class BacktrackSolver extends Solver {
         return cost;
     }
 
-    private void performBackTrack(Node dest) {
-        Stack<Node> path = new Stack<>();
-        path.push(origin);
+    public void computeBackTrack(Node dest) {
+        Stack<Edge> path = new Stack<>();
+        path.push(origin.next());
         maxCost = Integer.MAX_VALUE;
-        isValid(path, 0, dest);
-    }
+        int currentCost = 0;
 
-    private boolean isValid(Stack<Node> path, int currentPathCost, Node dest) {
-        if(path.isEmpty()) return false;
-        if(currentPathCost >= maxCost) return false;
+        while(!path.isEmpty()) {
+            Edge head = path.peek();
 
-
-        Node head = path.peek();
-
-        if(head.equals(dest)) {
-            cachedPaths.put(dest, new ArrayList<>(path));
-            System.out.println(currentPathCost);
-            this.maxCost = currentPathCost;
-            return isValid(path, currentPathCost, dest);
-        }
-
-        for (Edge edge : head.getEdges()) {
-            if(path.contains(edge.getDestination())) {
-                continue;
-            }
-            path.push(edge.getDestination());
-
-            if(isValid(path, currentPathCost + edge.getWeight(), dest)) {
-                return true;
+            if(head.getDestination() == dest) {
+                this.cachedPaths.put(dest, path.stream().map(Edge::getDestination).collect(Collectors.toList()));
+                maxCost = currentCost;
             }
 
-            path.pop();
+            if(head.getDestination().hasNext() && currentCost < maxCost) {
+                Edge next = head.getDestination().next();
+
+                if(path.size() >= 2 && next.getDestination().equals(path.get(path.size() - 2).getDestination()))
+                    continue;
+
+                path.push(next);
+                currentCost += next.getWeight();
+            } else {
+                head.getDestination().setNextTryIndex(0);
+                path.pop();
+                currentCost -= head.getWeight();
+            }
         }
 
-        return false;
+        if(cachedPaths.get(dest) != null) {
+            cachedPaths.get(dest).add(0, origin);
+        }
+
     }
 
 }

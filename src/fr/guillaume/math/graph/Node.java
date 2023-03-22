@@ -67,6 +67,14 @@ public class Node {
         this.nextTryIndex = nextTryIndex;
     }
 
+    public boolean hasNext() {
+        return nextTryIndex < this.edges.size();
+    }
+
+    public Edge next() {
+        return edges.get(nextTryIndex++);
+    }
+
     public IntVector2D getPosition() {
         return position;
     }

@@ -1,5 +1,6 @@
 package fr.guillaume.data;
 
+import fr.guillaume.math.IntVector2D;
 import fr.guillaume.ui.rendering.tiles.TileMapRenderer;
 
 import javax.imageio.ImageIO;
@@ -83,6 +84,61 @@ public class MapStorage {
         }
     }
 
+    public void saveExportedMap(HeightMapDataHolder map) throws IOException {
+        File mapFolder = new File(DATA_FOLDER, map.getProjectName());
+
+        if(!mapFolder.exists())
+            mapFolder.mkdirs();
+
+        File mapFile = new File(mapFolder, "exported.txt");
+        if(!mapFolder.exists())
+            mapFile.createNewFile();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(mapFile))){
+            writer.write((map.getSize().getX()-2) + "\n");
+            writer.write((map.getSize().getY()-2) + "\n");
+            for (int xPos = 1; xPos < map.getSize().getX() - 1; xPos++) {
+                for (int yPos = 1; yPos < map.getSize().getY() - 1; yPos++) {
+                    writer.write(map.getHeightAt(new IntVector2D(xPos, yPos)) + "\n");
+                }
+            }
+
+            writer.flush();
+        }
+    }
+
+    public void loadImportedMap(File mapFile) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(mapFile))){
+            int[][] heightMap = new int[10][10];
+
+            for (int xPos = 0; xPos < heightMap.length; xPos++) {
+                for (int yPos = 0; yPos < heightMap[0].length; yPos++) {
+                    heightMap[xPos][yPos] = 20;
+                }
+            }
+
+            List<String> lines = reader.lines().collect(Collectors.toList());
+            int sizeX = Integer.parseInt(lines.get(0));
+            int sizeY = Integer.parseInt(lines.get(1));
+
+            for (int xPos = 0; xPos < sizeX; xPos++) {
+                for (int yPos = 0; yPos < sizeY; yPos++) {
+                    heightMap[xPos + 1][yPos + 1] = Integer.parseInt(lines.get(2 + yPos + xPos * sizeY));
+                }
+            }
+
+//            Image thumbnailImage = ImageIO.read(thumbnail);
+
+            HeightMapDataHolder newMap = new HeightMapDataHolder(mapFile.getName().split("\\.")[0], null, heightMap);
+            this.loadedMaps.put(newMap.getProjectName(), newMap);
+
+            saveMap(newMap);
+            saveExportedMap(newMap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void delete(HeightMapDataHolder map) {
         this.loadedMaps.remove(map.getProjectName());
         File mapFolder = new File(DATA_FOLDER, map.getProjectName());
@@ -107,6 +163,14 @@ public class MapStorage {
             }
         }
         file.delete();
+    }
+
+    public void loadImportFolder() {
+        File importFolder = new File("import/");
+        for (File importFile : importFolder.listFiles()) {
+            loadImportedMap(importFile);
+            importFile.delete();
+        }
     }
 
 }

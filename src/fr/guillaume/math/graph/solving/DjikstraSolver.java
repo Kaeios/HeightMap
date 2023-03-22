@@ -4,10 +4,7 @@ import fr.guillaume.math.graph.Edge;
 import fr.guillaume.math.graph.Graph;
 import fr.guillaume.math.graph.Node;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DjikstraSolver extends Solver {
 
@@ -65,6 +62,7 @@ public class DjikstraSolver extends Solver {
 
     @Override
     public List<Node> getShortestPathTo(Node other) {
+        if(other.getDistance() == Integer.MAX_VALUE) return new ArrayList<>();
         List<Node> path = new LinkedList<>(other.getShortestPath());
         path.add(other);
         return path;

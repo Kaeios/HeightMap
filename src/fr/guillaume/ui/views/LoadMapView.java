@@ -2,7 +2,6 @@ package fr.guillaume.ui.views;
 
 import fr.guillaume.data.HeightMapDataHolder;
 import fr.guillaume.data.MapStorage;
-import fr.guillaume.ui.components.ImageComponent;
 import fr.guillaume.ui.components.RenderedComponent;
 import fr.guillaume.ui.rendering.tiles.ThumbnailRenderer;
 
@@ -36,11 +35,11 @@ public class LoadMapView extends JFrame {
             HeightMapDataHolder savedMap = savedMaps.get(i);
             RenderedComponent component = new RenderedComponent();
             component.setRenderer(new ThumbnailRenderer(storage, savedMap.getProjectName()));
-            component.setBounds(30 + i * 230, 30, 200, 200);
+            component.setBounds(30 + i%4 * 230, 30 + (i/4) * 300, 200, 200);
             add(component);
 
             JButton loadButton = new JButton("Charger");
-            loadButton.setBounds(30 + i*230, 230, 200, 30);
+            loadButton.setBounds(30 + (i%4)*230, 230 + (i/4) * 300, 200, 30);
 
             loadButton.addActionListener(event -> {
                 MapView mapEditor = new MapView(storage.getMap(savedMap.getProjectName()), storage, this);
@@ -50,7 +49,7 @@ public class LoadMapView extends JFrame {
             add(loadButton);
 
             JButton deleteButton = new JButton("Supprimer");
-            deleteButton.setBounds(30 + i*230, 260, 200, 30);
+            deleteButton.setBounds(30 + (i%4)*230, 260 + (i/4) * 300, 200, 30);
             deleteButton.addActionListener(event -> {
                 removeAll();
                 setVisible(false);

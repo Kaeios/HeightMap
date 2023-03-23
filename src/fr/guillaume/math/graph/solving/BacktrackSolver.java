@@ -1,11 +1,9 @@
 package fr.guillaume.math.graph.solving;
 
-import fr.guillaume.math.graph.Edge;
 import fr.guillaume.math.graph.Graph;
 import fr.guillaume.math.graph.Node;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class BacktrackSolver extends Solver {
 
@@ -50,31 +48,35 @@ public class BacktrackSolver extends Solver {
     }
 
     public void computeBackTrack(Node dest) {
-        Stack<Edge> path = new Stack<>();
-        path.push(origin.next());
+        Stack<Node> path = new Stack<>();
+        path.push(origin);
         maxCost = Integer.MAX_VALUE;
         int currentCost = 0;
 
         while(!path.isEmpty()) {
-            Edge head = path.peek();
+            System.out.println(path.size());
+            Node head = path.peek();
 
-            if(head.getDestination() == dest) {
-                this.cachedPaths.put(dest, path.stream().map(Edge::getDestination).collect(Collectors.toList()));
+            if(head == dest) {
+                this.cachedPaths.put(dest, new ArrayList<>(path));
                 maxCost = currentCost;
             }
 
-            if(head.getDestination().hasNext() && currentCost < maxCost) {
-                Edge next = head.getDestination().next();
+            if(head.hasNext() && currentCost < maxCost) {
+                Node next = head.next();
 
-                if(path.size() >= 2 && next.getDestination().equals(path.get(path.size() - 2).getDestination()))
+                if(path.contains(next)) continue;
+                if(path.size() >= 2 && next.equals(path.get(path.size() - 2)))
                     continue;
 
                 path.push(next);
-                currentCost += next.getWeight();
+                currentCost += Math.max(0, head.getHeight() - next.getHeight());
+                System.out.println(currentCost);
             } else {
-                head.getDestination().setNextTryIndex(0);
+                head.setNextTryIndex(0);
                 path.pop();
-                currentCost -= head.getWeight();
+                if(path.isEmpty()) continue;
+                currentCost -= Math.max(0, path.peek().getHeight() - head.getHeight());
             }
         }
 

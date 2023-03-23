@@ -71,8 +71,8 @@ public class Node {
         return nextTryIndex < this.edges.size();
     }
 
-    public Edge next() {
-        return edges.get(nextTryIndex++);
+    public Node next() {
+        return edges.get(nextTryIndex++).getDestination();
     }
 
     public IntVector2D getPosition() {

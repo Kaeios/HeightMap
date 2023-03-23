@@ -183,7 +183,6 @@ public class MapController extends FullMouseController {
             overlays.add(weightRenderer);
         } else if(this.getState().equals(MapViewState.SHOW_PATH)) {
             if(this.path == null || this.path.isEmpty()) {
-                System.out.println("ICI");
                 this.view.getHelpText().setText("/!\\ Il n'existe aucun chemin vers cette case");
                 return overlays;
             }

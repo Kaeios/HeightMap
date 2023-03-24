@@ -54,7 +54,6 @@ public class BacktrackSolver extends Solver {
         int currentCost = 0;
 
         while(!path.isEmpty()) {
-            System.out.println(path.size());
             Node head = path.peek();
 
             if(head == dest) {
@@ -71,7 +70,6 @@ public class BacktrackSolver extends Solver {
 
                 path.push(next);
                 currentCost += Math.max(0, head.getHeight() - next.getHeight());
-                System.out.println(currentCost);
             } else {
                 head.setNextTryIndex(0);
                 path.pop();

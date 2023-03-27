@@ -6,6 +6,7 @@ import fr.guillaume.ui.components.RenderedComponent;
 import fr.guillaume.ui.rendering.tiles.ThumbnailRenderer;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.List;
 
 public class LoadMapView extends JFrame {
@@ -30,6 +31,26 @@ public class LoadMapView extends JFrame {
     }
 
     private void renderView() {
+
+        JTextField nameField = new JTextField("Carte-" + ((int)(Math.random() * 100)));
+        nameField.setBounds(30, 700, 230, 30);
+        add(nameField);
+
+        JButton createButton = new JButton("Créer");
+        createButton.setBounds(260, 700, 150, 30);
+        createButton.addActionListener(event -> {
+            HeightMapDataHolder map = new HeightMapDataHolder(nameField.getText(), null);
+            try {
+                storage.saveMap(map);
+                setVisible(false);
+                MapView mapEditor = new MapView(map, storage, this);
+                mapEditor.setVisible(true);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        add(createButton);
+
         List<HeightMapDataHolder> savedMaps = storage.getMaps();
         for (int i = 0; i < savedMaps.size(); i++) {
             HeightMapDataHolder savedMap = savedMaps.get(i);

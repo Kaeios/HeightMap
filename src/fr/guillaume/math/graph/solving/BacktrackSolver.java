@@ -41,7 +41,8 @@ public class BacktrackSolver extends Solver {
         Node last = path.get(0);
 
         for (int i = 1; i < path.size(); i++) {
-            cost += Math.max(0, last.getHeight() - path.get(i).getHeight());
+            cost += Math.max(0, path.get(i).getHeight() - last.getHeight());
+            last = path.get(i);
         }
 
         return cost;

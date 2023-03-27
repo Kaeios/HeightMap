@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MapController extends FullMouseController {
+public class MapController extends FullMouseController implements ItemListener {
 
     private final int tileSize;
 
@@ -34,8 +34,12 @@ public class MapController extends FullMouseController {
     private IntVector2D endPosition;
 
     private Graph solution;
+    private int cost;
+
     private Solver solver;
     private List<Node> path = new LinkedList<>();
+
+    private boolean showHeight = false;
 
     public MapController(MapStorage storage, MapView view, int tileSize) {
         this.storage = storage;
@@ -178,6 +182,11 @@ public class MapController extends FullMouseController {
 
     public List<Placeable> getStateOverlay() {
         List<Placeable> overlays = new LinkedList<>();
+        if(this.getState().equals(MapViewState.EDIT) && showHeight) {
+            System.out.println("TEST");
+            PathWeightRenderer weightRenderer = new PathWeightRenderer(this.view.getHeightMap().getMap(), 64);
+            overlays.add(weightRenderer);
+        }
         if(this.getState().equals(MapViewState.SELECT_END) && solver != null && solver.isFast()) {
             PathWeightRenderer weightRenderer = new PathWeightRenderer(solution.getWeightMap(), 64);
             overlays.add(weightRenderer);
@@ -186,6 +195,12 @@ public class MapController extends FullMouseController {
                 this.view.getHelpText().setText("/!\\ Il n'existe aucun chemin vers cette case");
                 return overlays;
             }
+
+            this.view.getHelpText().setText("Coût du chemin : " + this.solver.getShortestPathCostTo(this.solution.getNodes()
+                    .stream()
+                    .filter(node -> node.getPosition().equals(this.endPosition))
+                    .findAny()
+                    .get()));
             PathRenderer pathRenderer = new PathRenderer(this.path, this.view.getHeightMap().getSize(), 64);
             overlays.add(pathRenderer);
         }
@@ -198,4 +213,10 @@ public class MapController extends FullMouseController {
         this.view.getHelpText().setText(state.getHelpText());
     }
 
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        this.showHeight = this.view.getShowHeighBox().isSelected();
+        this.view.refreshMap();
+        this.view.repaint();
+    }
 }

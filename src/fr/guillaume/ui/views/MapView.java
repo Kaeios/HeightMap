@@ -2,7 +2,6 @@ package fr.guillaume.ui.views;
 
 import fr.guillaume.data.HeightMapDataHolder;
 import fr.guillaume.data.MapStorage;
-import fr.guillaume.math.IntVector2D;
 import fr.guillaume.ui.components.RenderedComponent;
 import fr.guillaume.ui.components.buttons.HandledButton;
 import fr.guillaume.ui.controllers.map.MapController;
@@ -33,6 +32,8 @@ public class MapView extends JFrame {
 
     private JLabel helpText;
 
+    private JCheckBox showHeighBox;
+
     private CursorRenderer cursorRenderer;
     private RenderedComponent mapComponent;
 
@@ -59,13 +60,21 @@ public class MapView extends JFrame {
 
     public void renderView() {
         setupMapComponent();
-        refreshMap();
         setupHeightSlider();
         setupComputeButton();
         setupEditButton();
         setupSaveButton();
         setupLoadButton();
         setupHelpText();
+        setupHeightCheckBox();
+        refreshMap();
+    }
+
+    private void setupHeightCheckBox() {
+        showHeighBox = new JCheckBox("Hauteurs");
+        showHeighBox.setBounds(680, 700, 200, 10);
+        showHeighBox.addItemListener(controller);
+        add(showHeighBox);
     }
 
     private void setupHelpText() {
@@ -173,6 +182,10 @@ public class MapView extends JFrame {
 
     public JLabel getHelpText() {
         return helpText;
+    }
+
+    public JCheckBox getShowHeighBox() {
+        return showHeighBox;
     }
 
 }

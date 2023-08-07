@@ -9,7 +9,6 @@ public class AppMain {
 
         MapStorage storage = new MapStorage();
         storage.initStorage();
-        storage.loadImportFolder();
 
         LoadMapView loadView = new LoadMapView(storage);
         loadView.setVisible(true);
